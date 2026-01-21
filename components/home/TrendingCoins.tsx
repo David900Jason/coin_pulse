@@ -9,7 +9,7 @@ const TrendingCoins = async () => {
     const trendingCoins = await fetcher<{ coins: TrendingCoin[] }>(
         "/search/trending",
         undefined,
-        300,
+        300
     );
 
     const columns: DataTableColumn<TrendingCoin>[] = [
@@ -37,14 +37,15 @@ const TrendingCoins = async () => {
             cellClassName: "name-cell",
             cell: (coin) => {
                 const item = coin.item;
-                const isTrendingUp =
-                    item.data.price_change_percentage_24h.usd > 0;
+                const priceChange =
+                    item?.data?.price_change_percentage_24h?.usd ?? 0;
+                const isTrendingUp = priceChange > 0;
 
                 return (
                     <div
                         className={cn(
                             "price-change",
-                            isTrendingUp ? "text-green-500" : "text-red-500",
+                            isTrendingUp ? "text-green-500" : "text-red-500"
                         )}
                     >
                         <p>
@@ -53,10 +54,7 @@ const TrendingCoins = async () => {
                             ) : (
                                 <TrendingDown width={16} height={16} />
                             )}
-                            {item.data.price_change_percentage_24h.usd.toFixed(
-                                2,
-                            )}
-                            %
+                            {priceChange.toFixed(2)}%
                         </p>
                     </div>
                 );
@@ -66,9 +64,16 @@ const TrendingCoins = async () => {
             header: "Price",
             cellClassName: "price-cell",
             cell: (coin) => {
-                // Format the price into 2 decimal and commas
-                const price = coin.item.data.price.toFixed(2);
-                return "$" + price.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                const price = coin.item?.data?.price;
+
+                if (typeof price !== "number" || !isFinite(price)) {
+                    return "—";
+                }
+
+                const formattedPrice = price.toFixed(2);
+                return (
+                    "$" + formattedPrice.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                );
             },
         },
     ];
