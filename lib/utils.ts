@@ -51,6 +51,15 @@ export function trendingClasses(value: number) {
 export function timeAgo(date: string | number | Date): string {
     const now = new Date();
     const past = new Date(date);
+
+    if (isNaN(past.getTime())) {
+        return "";
+    }
+
+    if (past.getTime() > now.getTime()) {
+        return "in the future";
+    }
+
     const diff = now.getTime() - past.getTime(); // difference in ms
 
     const seconds = Math.floor(diff / 1000);
@@ -93,6 +102,9 @@ export const buildPageNumbers = (
 
     const pages: (number | typeof ELLIPSIS)[] = [];
 
+    if (totalPages <= 0) return pages;
+    const safeCurrent = Math.min(Math.max(currentPage, 1), totalPages);
+
     if (totalPages <= MAX_VISIBLE_PAGES) {
         for (let i = 1; i <= totalPages; i += 1) {
             pages.push(i);
@@ -102,8 +114,8 @@ export const buildPageNumbers = (
 
     pages.push(1);
 
-    const start = Math.max(2, currentPage - 1);
-    const end = Math.min(totalPages - 1, currentPage + 1);
+    const start = Math.max(2, safeCurrent - 1);
+    const end = Math.min(totalPages - 1, safeCurrent + 1);
 
     if (start > 2) {
         pages.push(ELLIPSIS);

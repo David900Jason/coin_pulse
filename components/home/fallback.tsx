@@ -14,7 +14,7 @@ export const CoinOverviewFallback = () => {
     );
 };
 
-const fallbackColumns: DataTableColumn<any>[] = [
+const fallbackColumns: DataTableColumn<unknown>[] = [
     {
         header: <div className="h-4 bg-gray-300 rounded w-12 animate-pulse" />,
         cell: () => (
@@ -42,7 +42,7 @@ const fallbackData = Array(6).fill({});
 
 export const TrendingCoinsFallback = () => {
     return (
-        <div id="tending-coins-fallback">
+        <div id="trending-coins-fallback">
             <h4 className="mb-4">Trending Coins</h4>
             <DataTable
                 columns={fallbackColumns}

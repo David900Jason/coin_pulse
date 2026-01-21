@@ -15,7 +15,7 @@ export async function fetcher<T>(
 ): Promise<T> {
     const url = qs.stringifyUrl(
         {
-            url: `${BASE_URL}/${endpoint}`,
+            url: `${BASE_URL}/${endpoint.replace(/^\//, "")}`,
             query: params,
         },
         { skipEmptyString: true, skipNull: true }
@@ -41,5 +41,5 @@ export async function fetcher<T>(
         );
     }
 
-    return response.json();
+    return await response.json();
 }
